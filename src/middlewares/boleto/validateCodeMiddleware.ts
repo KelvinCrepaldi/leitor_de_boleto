@@ -5,6 +5,7 @@ const validateCodeMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
+  const { code } = req.params;
   return next();
 };
 
