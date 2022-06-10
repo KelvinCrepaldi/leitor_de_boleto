@@ -1,24 +1,47 @@
 import IBoleto from "../../interfaces/boletoInterface";
 
 class GetBoletoService {
-  execute(code) {
-    const value =
-      parseInt(code.slice(37, 45)).toString() + "." + code.slice(45, 47);
-
-    const date = code.slice(33, 37);
-    console.log(value);
-
-    const resultBoleto = {
+  execute(code: string) {
+    const date: string | false = calculateExpirationDate(code.slice(33, 37));
+    const value: string = calculateValueLength(code, date);
+    const resultBoleto: IBoleto = {
       barCode: generateBarCode(code),
-      value: value,
-      date: new Date(),
+      amount: value,
     };
+
+    if (date !== false) {
+      resultBoleto.expirationDate = date;
+    }
 
     return resultBoleto;
   }
 }
 
-const generateBarCode = (code) => {
+const calculateValueLength = (code: string, date: string | false) => {
+  if (date === false) {
+    return parseInt(code.slice(33, 45)).toString() + "." + code.slice(45, 47);
+  }
+  return parseInt(code.slice(37, 45)).toString() + "." + code.slice(45, 47);
+};
+
+const calculateExpirationDate = (factor: string) => {
+  if (factor[0] == "0") {
+    return false;
+  }
+  const dateBase = new Date("10-07-1997");
+  dateBase.setDate(dateBase.getDate() + parseInt(factor));
+  const formatedDay = formatDataNumber(dateBase.getDate());
+  const formatedMonth = formatDataNumber(dateBase.getMonth() + 1);
+  return `${dateBase.getFullYear()}-${formatedMonth}-${formatedDay}`;
+};
+
+const formatDataNumber = (number) => {
+  if (number.toString().length == 1) {
+    return `0${number}`;
+  } else return `${number}`;
+};
+
+const generateBarCode = (code: string) => {
   const barCodeList = [];
   barCodeList.push(code.slice(0, 4));
   barCodeList.push("0");
@@ -28,13 +51,15 @@ const generateBarCode = (code) => {
   barCodeList.push(code.slice(21, 31));
 
   const barCodeJoin = barCodeList.join("");
-  barCodeList[1] = generateDV(barCodeJoin); //gera o DV do codigo e insere na posição correta
+
+  //gera o DV do codigo e insere na posição correta
+  barCodeList[1] = generateDV(barCodeJoin);
   const barCode = barCodeList.join("");
 
   return barCode;
 };
 
-const generateDV = (code) => {
+const generateDV = (code: string) => {
   const firstPosition = code.slice(0, 4); //separar primeira posição
   const secondPosition = code.slice(5, 44); //separar segunda posição
   const fullcode = firstPosition + secondPosition; //juntar posições
@@ -55,22 +80,25 @@ const generateDV = (code) => {
 
   //soma todos os numeros
   const sumAllNumbers = multiplicatedNumbers.reduce(
-    (count, number) => count + number,
+    (sum, number) => sum + number,
     0
   );
 
   // divide a soma por 11, subtrai 11 pelo resto
   const rest = sumAllNumbers % 11;
   const result = 11 - rest;
-  let verified = null;
 
   // se 0,10 ou 11 cv é igual a 1, se não então vai ser o próprio resultado
-  if (rest == 0 || rest >= 10) {
-    verified = 1;
-  } else {
-    verified = result;
+  if (result == 0 || result >= 10) {
+    return 1;
   }
-  return verified;
+  return result;
 };
 
 export default GetBoletoService;
+export {
+  calculateExpirationDate,
+  generateBarCode,
+  generateDV,
+  formatDataNumber,
+};

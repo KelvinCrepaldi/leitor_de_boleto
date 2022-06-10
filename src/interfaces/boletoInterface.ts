@@ -1,7 +1,7 @@
 interface IBoleto {
   barCode: string;
   amount: string;
-  expirationDate: Date;
+  expirationDate?: string;
 }
 
 export default IBoleto;
