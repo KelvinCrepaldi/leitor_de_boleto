@@ -24,18 +24,18 @@ const calculateValueLength = (code: string, date: string | false) => {
   return parseInt(code.slice(37, 45)).toString() + "." + code.slice(45, 47);
 };
 
-const calculateExpirationDate = (factor: string) => {
-  if (factor[0] == "0") {
+const calculateExpirationDate = (factorCode: string) => {
+  if (factorCode[0] == "0") {
     return false;
   }
   const dateBase = new Date("10-07-1997");
-  dateBase.setDate(dateBase.getDate() + parseInt(factor));
+  dateBase.setDate(dateBase.getDate() + parseInt(factorCode));
   const formatedDay = formatDataNumber(dateBase.getDate());
   const formatedMonth = formatDataNumber(dateBase.getMonth() + 1);
   return `${dateBase.getFullYear()}-${formatedMonth}-${formatedDay}`;
 };
 
-const formatDataNumber = (number) => {
+const formatDataNumber = (number: number) => {
   if (number.toString().length == 1) {
     return `0${number}`;
   } else return `${number}`;

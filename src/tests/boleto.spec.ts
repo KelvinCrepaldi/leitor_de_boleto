@@ -44,4 +44,37 @@ describe("Boleto route test", () => {
       message: "Invalid code, the code must have 47 numbers",
     });
   });
+
+  // 26090.46889 86171.185936 63800.000000 5 90150000020759
+  // 26090468898617118593663800000000590150000020759
+
+  it("DV code of field 1", async () => {
+    const response = await request(app).get(
+      `/boleto/26090468838617118593663800000000590150000020759`
+    );
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toStrictEqual({
+      message: "Invalid DV code of field 1",
+    });
+  });
+
+  it("DV code of field 1", async () => {
+    const response = await request(app).get(
+      `/boleto/26090468898617118593563800000000590150000020759`
+    );
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toStrictEqual({
+      message: "Invalid DV code of field 2",
+    });
+  });
+
+  it("DV code of field 1", async () => {
+    const response = await request(app).get(
+      `/boleto/26090468838617118593663800000002590150000020759`
+    );
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toStrictEqual({
+      message: "Invalid DV code of field 1",
+    });
+  });
 });
