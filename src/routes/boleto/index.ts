@@ -1,6 +1,6 @@
 import Router from "express";
 import { getBoletoController } from "../../controllers";
-import { validateCodeMiddleware } from "../../middlewares";
+import { validateCodeMiddleware } from "../../middlewares/boleto";
 
 const boletoRouter = Router();
 
