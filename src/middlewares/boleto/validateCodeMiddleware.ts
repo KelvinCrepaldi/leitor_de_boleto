@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { ErrorHandler } from "../../utils";
 
+// middleware responsavel por calcular os códigos de verificação, e tratamento de erros.
+// responsavel por definir o tipo de boleto, e verificar o código de moeda
+
 const validateCodeMiddleware = (
   req: Request,
   res: Response,
@@ -21,7 +24,7 @@ const validateCodeMiddleware = (
     if (isValid === false) {
       throw new ErrorHandler(400, "Verification code is invalid.");
     }
-    req["boletoType"] = "convenio";
+    req.body["boletoType"] = "convenio";
     return next();
   }
 
@@ -30,7 +33,7 @@ const validateCodeMiddleware = (
     if (isValid === false) {
       throw new ErrorHandler(400, "Verification code is invalid.");
     }
-    req["boletoType"] = "titulo";
+    req.body["boletoType"] = "titulo";
     return next();
   }
 
@@ -183,3 +186,4 @@ const filterInt = function (value: string): number | false {
 };
 
 export default validateCodeMiddleware;
+export { multiplyAndSumField };

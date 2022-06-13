@@ -56,4 +56,56 @@ describe("Boleto route test", () => {
       message: "The code is not a number.",
     });
   });
+
+  it("Boleto type convenio", async () => {
+    const response = await request(app).get(
+      `/boleto/817700000000010936759702411310797039001433708318`
+    );
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toStrictEqual({
+      barCode: "8174000000001093675970411310797030014337083",
+      amount: "0.10",
+    });
+  });
+
+  it("Boleto type convenio, invalid code in position[2]", async () => {
+    const response = await request(app).get(
+      `/boleto/812300000000010936759702411310797039001433708318`
+    );
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toStrictEqual({
+      message:
+        "Actual value identification or reference is invalid (third code number)",
+    });
+  });
+
+  it("Boleto type convenio, invalid DV code1", async () => {
+    const response = await request(app).get(
+      `/boleto/817700000000010236759702411310797039001433708318`
+    );
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toStrictEqual({
+      message: "Verification code is invalid.",
+    });
+  });
+
+  it("Boleto type convenio, invalid DV code2", async () => {
+    const response = await request(app).get(
+      `/boleto/817700000000010136759702411310797039001433708318`
+    );
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toStrictEqual({
+      message: "Verification code is invalid.",
+    });
+  });
+
+  it("Boleto type convenio, invalid DV code3", async () => {
+    const response = await request(app).get(
+      `/boleto/817700000000010136759702411310797031001433708318`
+    );
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toStrictEqual({
+      message: "Verification code is invalid.",
+    });
+  });
 });
