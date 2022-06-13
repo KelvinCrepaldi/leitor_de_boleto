@@ -3,7 +3,7 @@ import request from "supertest";
 import app from "../app";
 
 describe("Boleto route test", () => {
-  it("True code", async () => {
+  it("True code test", async () => {
     const response = await request(app).get(
       `/boleto/21290001192110001210904475617405975870000002000`
     );
@@ -15,66 +15,97 @@ describe("Boleto route test", () => {
     });
   });
 
-  it("The code is not a number", async () => {
+  it("Is convenio type", async () => {
     const response = await request(app).get(
-      `/boleto/212900a1192110001210904475617405975870000002000`
+      `/boleto/26090468898617118593663800000000590150000020759`
     );
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(200);
     expect(response.body).toStrictEqual({
-      message: "The code is not a number",
+      barCode: "26095901500000207590468886171185936380000000",
+      amount: "207.59",
+      expirationDate: "2022-06-13",
     });
   });
 
-  it("Code have less than 47 numbers", async () => {
+  it("Code size smaller than allowed", async () => {
     const response = await request(app).get(
-      `/boleto/212900119211000104475617405975870000002000`
+      `/boleto/2609046889861711859366380000000590150000020759`
     );
     expect(response.statusCode).toBe(400);
     expect(response.body).toStrictEqual({
-      message: "Invalid code, the code must have 47 numbers",
+      message: "Invalid code size",
     });
   });
 
-  it("Code have more than 47 numbers", async () => {
+  it("Code size larger than allowed", async () => {
     const response = await request(app).get(
-      `/boleto/2129001192110001044753333333333617405975870000002000`
+      `/boleto/2609046889861711859366380000000590150000020759000`
     );
     expect(response.statusCode).toBe(400);
     expect(response.body).toStrictEqual({
-      message: "Invalid code, the code must have 47 numbers",
+      message: "Invalid code size",
     });
   });
 
-  // 26090.46889 86171.185936 63800.000000 5 90150000020759
-  // 26090468898617118593663800000000590150000020759
-
-  it("DV code of field 1", async () => {
+  it("The code have invalid characters", async () => {
     const response = await request(app).get(
-      `/boleto/26090468838617118593663800000000590150000020759`
+      `/boleto/2609046889861711859x66380000000590150000020759000`
     );
     expect(response.statusCode).toBe(400);
     expect(response.body).toStrictEqual({
-      message: "Invalid DV code of field 1",
+      message: "The code is not a number.",
     });
   });
 
-  it("DV code of field 1", async () => {
+  it("Boleto type convenio", async () => {
     const response = await request(app).get(
-      `/boleto/26090468898617118593563800000000590150000020759`
+      `/boleto/817700000000010936759702411310797039001433708318`
     );
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(200);
     expect(response.body).toStrictEqual({
-      message: "Invalid DV code of field 2",
+      barCode: "8174000000001093675970411310797030014337083",
+      amount: "0.10",
     });
   });
 
-  it("DV code of field 1", async () => {
+  it("Boleto type convenio, invalid code in position[2]", async () => {
     const response = await request(app).get(
-      `/boleto/26090468838617118593663800000002590150000020759`
+      `/boleto/812300000000010936759702411310797039001433708318`
     );
     expect(response.statusCode).toBe(400);
     expect(response.body).toStrictEqual({
-      message: "Invalid DV code of field 1",
+      message:
+        "Actual value identification or reference is invalid (third code number)",
+    });
+  });
+
+  it("Boleto type convenio, invalid DV code1", async () => {
+    const response = await request(app).get(
+      `/boleto/817700000000010236759702411310797039001433708318`
+    );
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toStrictEqual({
+      message: "Verification code is invalid.",
+    });
+  });
+
+  it("Boleto type convenio, invalid DV code2", async () => {
+    const response = await request(app).get(
+      `/boleto/817700000000010136759702411310797039001433708318`
+    );
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toStrictEqual({
+      message: "Verification code is invalid.",
+    });
+  });
+
+  it("Boleto type convenio, invalid DV code3", async () => {
+    const response = await request(app).get(
+      `/boleto/817700000000010136759702411310797031001433708318`
+    );
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toStrictEqual({
+      message: "Verification code is invalid.",
     });
   });
 });

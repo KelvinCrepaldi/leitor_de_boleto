@@ -1,6 +1,6 @@
 interface IBoleto {
   barCode: string;
-  amount: string;
+  amount?: string;
   expirationDate?: string;
 }
 

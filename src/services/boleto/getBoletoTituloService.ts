@@ -1,9 +1,9 @@
 import IBoleto from "../../interfaces/boletoInterface";
 
-class GetBoletoService {
+class GetBoletoTituloService {
   execute(code: string) {
     const date: string | false = calculateExpirationDate(code.slice(33, 37));
-    const value: string = calculateValueLength(code, date);
+    const value: string = formatValue(code, date);
     const resultBoleto: IBoleto = {
       barCode: generateBarCode(code),
       amount: value,
@@ -17,7 +17,7 @@ class GetBoletoService {
   }
 }
 
-const calculateValueLength = (code: string, date: string | false) => {
+const formatValue = (code: string, date: string | false) => {
   if (date === false) {
     return parseInt(code.slice(33, 45)).toString() + "." + code.slice(45, 47);
   }
@@ -95,7 +95,7 @@ const generateDV = (code: string) => {
   return result;
 };
 
-export default GetBoletoService;
+export default GetBoletoTituloService;
 export {
   calculateExpirationDate,
   generateBarCode,
