@@ -1,7 +1,7 @@
 import IBoleto from "../../interfaces/boletoInterface";
+import validateBoletoCode from "../../utils/boleto/validateBoletoCode";
 import GetBoletoConvenioService from "./getBoletoConvenioService";
 import GetBoletoTituloService from "./getBoletoTituloService";
-import validateBoletoCode from "./validateBoletoCode";
 
 class GetBoletoService {
   execute(code: string): IBoleto {

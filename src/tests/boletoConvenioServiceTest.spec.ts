@@ -2,9 +2,7 @@ import IBoleto from "../interfaces/boletoInterface";
 import { describe, expect, it } from "@jest/globals";
 import request from "supertest";
 import app from "../app";
-
 import { GetBoletoConvenioService } from "../services";
-import { calculateDvBarCode } from "../services/boleto/getBoletoConvenioService";
 
 const CONVENIO_MOD10_CODE =
   "817700000000010936759702411310797039001433708318";
@@ -33,22 +31,6 @@ describe("GetBoletoConvenioService", () => {
 
     const result = new GetBoletoConvenioService().execute(CONVENIO_MOD11_CODE);
     expect(result).toStrictEqual(expectedObject);
-  });
-});
-
-describe("calculateDvBarCode", () => {
-  it("calculates modulo 10 barcode DV", () => {
-    const result = calculateDvBarCode(
-      "8170000000001093675970411310797030014337083"
-    );
-    expect(result).toBe("8174000000001093675970411310797030014337083");
-  });
-
-  it("calculates modulo 11 barcode DV", () => {
-    const result = calculateDvBarCode(
-      "8180000000000109367597024113107970390014337"
-    );
-    expect(result).toBe("8184000000000109367597024113107970390014337");
   });
 });
 

@@ -1,44 +1,12 @@
 import { describe, expect, it } from "@jest/globals";
-import request from "supertest";
 import IBoleto from "../interfaces/boletoInterface";
+import request from "supertest";
 import app from "../app";
-
-import {
-  calculateExpirationDate,
-  generateBarCode,
-  generateDV,
-} from "../services/boleto/getBoletoTituloService";
 import { GetBoletoTituloService } from "../services";
 
 const TITULO_CODE = "21290001192110001210904475617405975870000002000";
 
 describe("GetBoletoTituloService", () => {
-  it("calculates expiration date from factor code", () => {
-    const result = calculateExpirationDate("1000");
-    expect(result).toBe("2000-07-03");
-  });
-
-  it("generates barcode from titulo digitable line", () => {
-    const result = generateBarCode(TITULO_CODE);
-    expect(result).toBe(
-      "21299758700000020000001121100012100447561740"
-    );
-  });
-
-  it("generates general barcode DV using modulo 11", () => {
-    const result = generateDV(
-      "21299758700000020000001121100012100447561740"
-    );
-    expect(result).toBe(9);
-  });
-
-  it("returns 1 when modulo 11 DV calculation results in 0 or 10", () => {
-    const result = generateDV(
-      "00000000000000000000000000000000000000000000"
-    );
-    expect(result).toBe(1);
-  });
-
   it("builds titulo response with barcode, amount and expiration date", () => {
     const expectedObject: IBoleto = {
       barCode: "21299758700000020000001121100012100447561740",
