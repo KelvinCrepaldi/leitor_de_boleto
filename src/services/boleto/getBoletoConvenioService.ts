@@ -4,16 +4,14 @@ import {
   generateConvenioBarcode,
 } from "../../utils/boleto/convenio";
 
-class GetBoletoConvenioService {
-  execute(code: string): IBoleto {
-    const barCode = generateConvenioBarcode(code);
+const getBoletoConvenio = (code: string): IBoleto => {
+  const barCode = generateConvenioBarcode(code);
 
-    return {
-      barCode,
-      amount: formatConvenioAmount(barCode),
-      type: "convenio",
-    };
-  }
-}
+  return {
+    barCode,
+    amount: formatConvenioAmount(barCode),
+    type: "convenio",
+  };
+};
 
-export default GetBoletoConvenioService;
+export default getBoletoConvenio;

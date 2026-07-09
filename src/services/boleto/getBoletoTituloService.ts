@@ -6,22 +6,20 @@ import {
   sliceTituloValueSegments,
 } from "../../utils/boleto/titulo";
 
-class GetBoletoTituloService {
-  execute(code: string): IBoleto {
-    const { factor } = sliceTituloValueSegments(code);
-    const expirationDate = calculateExpirationDate(factor);
-    const resultBoleto: IBoleto = {
-      barCode: generateTituloBarcode(code),
-      amount: formatTituloAmount(code, expirationDate),
-      type: "titulo",
-    };
+const getBoletoTitulo = (code: string): IBoleto => {
+  const { factor } = sliceTituloValueSegments(code);
+  const expirationDate = calculateExpirationDate(factor);
+  const resultBoleto: IBoleto = {
+    barCode: generateTituloBarcode(code),
+    amount: formatTituloAmount(code, expirationDate),
+    type: "titulo",
+  };
 
-    if (expirationDate !== false) {
-      resultBoleto.expirationDate = expirationDate;
-    }
-
-    return resultBoleto;
+  if (expirationDate !== false) {
+    resultBoleto.expirationDate = expirationDate;
   }
-}
 
-export default GetBoletoTituloService;
+  return resultBoleto;
+};
+
+export default getBoletoTitulo;

@@ -1,18 +1,16 @@
 import IBoleto from "../../interfaces/boletoInterface";
 import validateBoletoCode from "../../utils/boleto/validateBoletoCode";
-import GetBoletoConvenioService from "./getBoletoConvenioService";
-import GetBoletoTituloService from "./getBoletoTituloService";
+import getBoletoConvenio from "./getBoletoConvenioService";
+import getBoletoTitulo from "./getBoletoTituloService";
 
-class GetBoletoService {
-  execute(code: string): IBoleto {
-    const type = validateBoletoCode(code);
+const getBoleto = (code: string): IBoleto => {
+  const type = validateBoletoCode(code);
 
-    if (type === "titulo") {
-      return new GetBoletoTituloService().execute(code);
-    }
-
-    return new GetBoletoConvenioService().execute(code);
+  if (type === "titulo") {
+    return getBoletoTitulo(code);
   }
-}
 
-export default GetBoletoService;
+  return getBoletoConvenio(code);
+};
+
+export default getBoleto;

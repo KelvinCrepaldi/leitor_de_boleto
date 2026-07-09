@@ -2,11 +2,11 @@ import { describe, expect, it } from "@jest/globals";
 import IBoleto from "../interfaces/boletoInterface";
 import request from "supertest";
 import app from "../app";
-import { GetBoletoTituloService } from "../services";
+import { getBoletoTitulo } from "../services";
 
 const TITULO_CODE = "21290001192110001210904475617405975870000002000";
 
-describe("GetBoletoTituloService", () => {
+describe("getBoletoTitulo", () => {
   it("builds titulo response with barcode, amount and expiration date", () => {
     const expectedObject: IBoleto = {
       barCode: "21299758700000020000001121100012100447561740",
@@ -15,7 +15,7 @@ describe("GetBoletoTituloService", () => {
       type: "titulo",
     };
 
-    const result = new GetBoletoTituloService().execute(TITULO_CODE);
+    const result = getBoletoTitulo(TITULO_CODE);
     expect(result).toStrictEqual(expectedObject);
   });
 
@@ -26,7 +26,7 @@ describe("GetBoletoTituloService", () => {
       type: "titulo",
     };
 
-    const result = new GetBoletoTituloService().execute(
+    const result = getBoletoTitulo(
       "21290001192110001210904475617405905870000002000"
     );
     expect(result).toStrictEqual(expectedObject);

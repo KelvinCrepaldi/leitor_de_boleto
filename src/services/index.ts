@@ -1,5 +1,5 @@
-import GetBoletoTituloService from "./boleto/getBoletoTituloService";
-import GetBoletoConvenioService from "./boleto/getBoletoConvenioService";
-import GetBoletoService from "./boleto/getBoletoService";
+import getBoletoTitulo from "./boleto/getBoletoTituloService";
+import getBoletoConvenio from "./boleto/getBoletoConvenioService";
+import getBoleto from "./boleto/getBoletoService";
 
-export { GetBoletoTituloService, GetBoletoConvenioService, GetBoletoService };
+export { getBoletoTitulo, getBoletoConvenio, getBoleto };

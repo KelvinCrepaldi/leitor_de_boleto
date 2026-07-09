@@ -2,7 +2,7 @@ import IBoleto from "../interfaces/boletoInterface";
 import { describe, expect, it } from "@jest/globals";
 import request from "supertest";
 import app from "../app";
-import { GetBoletoConvenioService } from "../services";
+import { getBoletoConvenio } from "../services";
 
 const CONVENIO_MOD10_CODE =
   "817700000000010936759702411310797039001433708318";
@@ -10,7 +10,7 @@ const CONVENIO_MOD10_CODE =
 const CONVENIO_MOD11_CODE =
   "848000000006010936759701241131079700390014337082";
 
-describe("GetBoletoConvenioService", () => {
+describe("getBoletoConvenio", () => {
   it("generates barcode and amount for modulo 10 convenio", () => {
     const expectedObject: IBoleto = {
       barCode: "8174000000001093675970411310797030014337083",
@@ -18,7 +18,7 @@ describe("GetBoletoConvenioService", () => {
       type: "convenio",
     };
 
-    const result = new GetBoletoConvenioService().execute(CONVENIO_MOD10_CODE);
+    const result = getBoletoConvenio(CONVENIO_MOD10_CODE);
     expect(result).toStrictEqual(expectedObject);
   });
 
@@ -29,7 +29,7 @@ describe("GetBoletoConvenioService", () => {
       type: "convenio",
     };
 
-    const result = new GetBoletoConvenioService().execute(CONVENIO_MOD11_CODE);
+    const result = getBoletoConvenio(CONVENIO_MOD11_CODE);
     expect(result).toStrictEqual(expectedObject);
   });
 });
