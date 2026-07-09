@@ -10,15 +10,15 @@ Node.js Express.
 
 baixar dependencias do projeto
 
-- $ yarn install
+- $ pnpm install
 
 iniciar app
 
-- $ yarn app
+- $ pnpm dev
 
 iniciar testes
 
-- $ yarn test
+- $ pnpm test
 
 configuração da porta em .env
 por padrão a porta é configurada para 8080 caso não seja especificada
