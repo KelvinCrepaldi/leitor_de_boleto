@@ -7,6 +7,14 @@ Projeto de estudos para um desafio técnico: uma API que lê e valida **linhas d
 
 A API valida os dígitos verificadores (DV), identifica o tipo do boleto e retorna o código de barras, valor e data de vencimento (quando aplicável).
 
+## Sobre o projeto
+
+Este projeto nasceu de um **desafio técnico** proposto para implementar um leitor de linha digitável de boleto. O objetivo era validar códigos no padrão brasileiro (FEBRABAN) e retornar as informações principais — código de barras, valor e vencimento — quando o boleto fosse válido.
+
+A maior dificuldade não foi a API em si, e sim **entender as regras dos algoritmos como um todo**: como os dígitos verificadores são calculados, quando usar módulo 10 ou módulo 11, e principalmente **as diferenças entre boleto título (47 dígitos) e convênio (48 dígitos)**. Cada tipo tem estrutura de campos, validações e regras de DV distintas, o que exigiu leitura da documentação FEBRABAN e bastante teste para garantir que a implementação refletisse o padrão correto.
+
+Ao longo do desenvolvimento, o foco foi transformar essas regras em código organizado, testável e fácil de manter — com validação centralizada, separação por domínio (título/convênio) e testes cobrindo casos reais de sucesso e erro.
+
 ## Tecnologias
 
 | Tecnologia | Versão |
