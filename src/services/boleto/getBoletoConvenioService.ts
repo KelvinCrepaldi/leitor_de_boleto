@@ -1,5 +1,8 @@
 import IBoleto from "../../interfaces/boletoInterface";
-import { multiplyAndSumField } from "../../middlewares/boleto/validateCodeMiddleware";
+import {
+  calculateDvModulo11Arrecadacao,
+  multiplyAndSumField,
+} from "../../middlewares/boleto/validateCodeMiddleware";
 
 class GetBoletoConvenioService {
   execute(code: string) {
@@ -38,13 +41,9 @@ const calculateDvBarCode = (codeBar) => {
 
   if (codeBar[2] === "8" || codeBar[2] === "9") {
     const fieldMultiply = multiplyAndSumField(fieldJoin, 1);
-    const rest = fieldMultiply % 11;
-    const result = 11 - rest;
+    const dv = calculateDvModulo11Arrecadacao(fieldMultiply);
 
-    if (result >= 1) return [field1, "0", field2].join("");
-    if (result === 10) return [field1, "1", field2].join("");
-
-    return [field1, result, field2].join("");
+    return [field1, dv, field2].join("");
   }
 };
 

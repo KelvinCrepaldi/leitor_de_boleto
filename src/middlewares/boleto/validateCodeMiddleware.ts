@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { generateDV } from "../../services/boleto/getBoletoTituloService";
 import { ErrorHandler } from "../../utils";
 
 // middleware responsavel por calcular os códigos de verificação, e tratamento de erros.
@@ -59,7 +60,19 @@ const calculateTitulo = (code: string): boolean => {
     dvNumbers.push(calculateDVTitulo(field));
   });
 
-  return compareDVTitulo(dvNumbers, code);
+  if (!compareDVTitulo(dvNumbers, code)) {
+    return false;
+  }
+
+  const barCodeJoin =
+    code.slice(0, 4) +
+    "0" +
+    code.slice(33, 47) +
+    code.slice(4, 9) +
+    code.slice(10, 20) +
+    code.slice(21, 31);
+
+  return parseInt(code[32]) === generateDV(barCodeJoin);
 };
 
 const calculateConvenio = (code: string): boolean => {
@@ -150,11 +163,15 @@ const calculateDvConvenio = (number: number, type: number): number => {
   }
 
   if (type === 1) {
-    const DAC = number % 11;
-    if (DAC <= 1) return 0;
-    if (DAC > 9) return 1;
-    return DAC;
+    return calculateDvModulo11Arrecadacao(number);
   }
+};
+
+const calculateDvModulo11Arrecadacao = (sum: number): number => {
+  const rest = sum % 11;
+  if (rest <= 1) return 0;
+  if (rest === 10) return 1;
+  return 11 - rest;
 };
 
 const calculateDVTitulo = (field: any): string => {
@@ -186,4 +203,4 @@ const filterInt = function (value: string): number | false {
 };
 
 export default validateCodeMiddleware;
-export { multiplyAndSumField };
+export { calculateDvModulo11Arrecadacao, multiplyAndSumField };
