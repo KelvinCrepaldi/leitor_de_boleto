@@ -1,5 +1,5 @@
 import { describe, expect, it } from "@jest/globals";
-import { calculateDvModulo11Arrecadacao } from "../middlewares/boleto/validateCodeMiddleware";
+import { calculateDvModulo11Arrecadacao } from "../utils/boleto/dvCalculations";
 
 describe("calculateDvModulo11Arrecadacao", () => {
   it("returns 0 when remainder is 0 or 1", () => {

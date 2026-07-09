@@ -18,6 +18,7 @@ describe("Boleto route integration", () => {
       barCode: "21299758700000020000001121100012100447561740",
       amount: "20.00",
       expirationDate: "2018-07-16",
+      type: "titulo",
     });
   });
 
@@ -30,6 +31,7 @@ describe("Boleto route integration", () => {
       barCode: "26095901500000207590468886171185936380000000",
       amount: "207.59",
       expirationDate: "2022-06-13",
+      type: "titulo",
     });
   });
 
@@ -41,6 +43,7 @@ describe("Boleto route integration", () => {
     expect(response.body).toStrictEqual({
       barCode: "8174000000001093675970411310797030014337083",
       amount: "0.10",
+      type: "convenio",
     });
   });
 
@@ -52,6 +55,7 @@ describe("Boleto route integration", () => {
     expect(response.body).toStrictEqual({
       barCode: "8480000000001093675970241131079703900143370",
       amount: "0.10",
+      type: "convenio",
     });
   });
 

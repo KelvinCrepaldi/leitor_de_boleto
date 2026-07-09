@@ -17,6 +17,7 @@ describe("GetBoletoConvenioService", () => {
     const expectedObject: IBoleto = {
       barCode: "8174000000001093675970411310797030014337083",
       amount: "0.10",
+      type: "convenio",
     };
 
     const result = new GetBoletoConvenioService().execute(CONVENIO_MOD10_CODE);
@@ -27,6 +28,7 @@ describe("GetBoletoConvenioService", () => {
     const expectedObject: IBoleto = {
       barCode: "8480000000001093675970241131079703900143370",
       amount: "0.10",
+      type: "convenio",
     };
 
     const result = new GetBoletoConvenioService().execute(CONVENIO_MOD11_CODE);

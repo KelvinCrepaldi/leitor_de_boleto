@@ -2,7 +2,7 @@ import IBoleto from "../../interfaces/boletoInterface";
 import {
   calculateDvModulo11Arrecadacao,
   multiplyAndSumField,
-} from "../../middlewares/boleto/validateCodeMiddleware";
+} from "../../utils/boleto/dvCalculations";
 
 class GetBoletoConvenioService {
   execute(code: string) {
@@ -27,11 +27,13 @@ const generateBarCode = (code: string) => {
   return calculateDvBarCode(codeBar);
 };
 
-const calculateDvBarCode = (codeBar) => {
+const calculateDvBarCode = (codeBar: string): string => {
   const field1 = codeBar.slice(0, 3);
   const field2 = codeBar.slice(4, 43);
   const fieldJoin = [field1, field2].join("").split("").reverse();
-  if (codeBar[2] === "6" || codeBar[2] === "7") {
+  const moeda = codeBar[2];
+
+  if (moeda === "6" || moeda === "7") {
     const fieldMultiply = multiplyAndSumField(fieldJoin, 0);
     const rest = fieldMultiply % 10;
     if (rest === 0) return [field1, "0", field2].join("");
@@ -40,16 +42,18 @@ const calculateDvBarCode = (codeBar) => {
     return [field1, result, field2].join("");
   }
 
-  if (codeBar[2] === "8" || codeBar[2] === "9") {
+  if (moeda === "8" || moeda === "9") {
     const fieldMultiply = multiplyAndSumField(fieldJoin, 1);
     const dv = calculateDvModulo11Arrecadacao(fieldMultiply);
 
     return [field1, dv, field2].join("");
   }
+
+  return codeBar;
 };
 
-const formatValue = (value) => {
-  return parseInt(value.slice(0, 8)).toString() + "." + value.slice(8, 11);
+const formatValue = (value: string): string => {
+  return parseInt(value.slice(0, 8), 10).toString() + "." + value.slice(8, 11);
 };
 
 export default GetBoletoConvenioService;

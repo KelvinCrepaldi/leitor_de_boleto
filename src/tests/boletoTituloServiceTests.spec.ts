@@ -44,6 +44,7 @@ describe("GetBoletoTituloService", () => {
       barCode: "21299758700000020000001121100012100447561740",
       amount: "20.00",
       expirationDate: "2018-07-16",
+      type: "titulo",
     };
 
     const result = new GetBoletoTituloService().execute(TITULO_CODE);
@@ -54,6 +55,7 @@ describe("GetBoletoTituloService", () => {
     const expectedObject: IBoleto = {
       barCode: "21291058700000020000001121100012100447561740",
       amount: "58700000020.00",
+      type: "titulo",
     };
 
     const result = new GetBoletoTituloService().execute(
