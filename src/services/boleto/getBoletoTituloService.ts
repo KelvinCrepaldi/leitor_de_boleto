@@ -7,6 +7,7 @@ class GetBoletoTituloService {
     const resultBoleto: IBoleto = {
       barCode: generateBarCode(code),
       amount: value,
+      type: "titulo",
     };
 
     if (date !== false) {

@@ -11,6 +11,7 @@ class GetBoletoConvenioService {
     const resultBoleto: IBoleto = {
       barCode: barCode,
       amount: value,
+      type: "convenio",
     };
 
     return resultBoleto;
