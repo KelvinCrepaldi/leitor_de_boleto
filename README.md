@@ -13,32 +13,41 @@ Este projeto nasceu de um **desafio técnico** proposto para implementar um leit
 
 A maior dificuldade não foi a API em si, e sim **entender as regras dos algoritmos como um todo**: como os dígitos verificadores são calculados, quando usar módulo 10 ou módulo 11, e principalmente **as diferenças entre boleto título (47 dígitos) e convênio (48 dígitos)**. Cada tipo tem estrutura de campos, validações e regras de DV distintas, o que exigiu leitura da documentação FEBRABAN e bastante teste para garantir que a implementação refletisse o padrão correto.
 
-Ao longo do desenvolvimento, o foco foi transformar essas regras em código organizado, testável e fácil de manter — com validação centralizada, separação por domínio (título/convênio) e testes cobrindo casos reais de sucesso e erro.
-
-> **Refatorações e legibilidade**
+> **Refatorações e legibilidade**  
+> Projeto originalmente desenvolvido em 2022. Refatorado utilizando IA como ferramenta de produtividade para melhorar arquitetura, tipagem, performance, testes e organização do código.
 >
-> Desde a primeira versão do algoritmo, foram feitas diversas refatorações para tornar o código mais fácil de ler e de entender. A ideia foi aproximar a implementação dos passos descritos na documentação FEBRABAN: primitivas matemáticas reutilizáveis ficam em `utils/boleto/dv.ts`, a validação de formato fica no middleware, e os services (`getBoletoTitulo`, `getBoletoConvenio`) concentram o fluxo completo — validação e extração — com comentários que espelham o passo a passo do README. Cada iteração buscou reduzir funções aninhadas e abstrações difíceis de seguir, priorizando um código que qualquer pessoa consiga percorrer do início ao fim sem precisar saltar entre muitos arquivos.
+> Desde a primeira versão do algoritmo, foram feitas diversas refatorações para tornar o código mais fácil de ler e de entender. A ideia foi aproximar a implementação dos passos descritos na documentação FEBRABAN com comentários que espelham o passo a passo do README (na seção do readme sobre a FEBRABAN). Buscando reduzir funções aninhadas e abstrações difíceis de entender, priorizando um código que qualquer pessoa consiga percorrer do início ao fim sem precisar saltar entre muitos arquivos.
+
+
 
 ## Tecnologias
 
-| Tecnologia | Versão |
-|---|---|
-| Node.js | 18+ recomendado |
-| pnpm | 10.13.1 |
-| TypeScript | 4.9.5 |
-| Express | 4.22.2 |
-| Jest | 28.1.3 |
-| ts-jest | 28.0.8 |
-| ts-node-dev | 2.0.0 |
-| supertest | 6.3.4 |
+
+| Tecnologia  | Versão          |
+| ----------- | --------------- |
+| Node.js     | 18+ recomendado |
+| pnpm        | 10.13.1         |
+| TypeScript  | 4.9.5           |
+| Express     | 4.22.2          |
+| Jest        | 28.1.3          |
+| ts-jest     | 28.0.8          |
+| ts-node-dev | 2.0.0           |
+| supertest   | 6.3.4           |
+
+
+
 
 ## Como rodar
+
+
 
 ### 1. Instalar dependências
 
 ```bash
 pnpm install
 ```
+
+
 
 ### 2. Configurar porta (opcional)
 
@@ -56,11 +65,15 @@ Por padrão, a aplicação roda na porta **8080**.
 pnpm dev
 ```
 
+
+
 ### 4. Rodar os testes
 
 ```bash
 pnpm test
 ```
+
+
 
 ## Endpoint
 
@@ -74,6 +87,8 @@ GET /boleto/:code
 http://localhost:8080/boleto/21290001192110001210904475617405975870000002000
 ```
 
+
+
 ### Resposta de sucesso (título)
 
 ```json
@@ -85,6 +100,8 @@ http://localhost:8080/boleto/21290001192110001210904475617405975870000002000
 }
 ```
 
+
+
 ### Resposta de sucesso (convênio)
 
 ```json
@@ -95,6 +112,8 @@ http://localhost:8080/boleto/21290001192110001210904475617405975870000002000
 }
 ```
 
+
+
 ### Resposta de erro
 
 ```json
@@ -103,38 +122,54 @@ http://localhost:8080/boleto/21290001192110001210904475617405975870000002000
 }
 ```
 
+
+
 ## Exemplos para testar
+
+
 
 ### Título bancário (47 dígitos)
 
-| Descrição | Linha digitável |
-|---|---|
-| Boleto com vencimento | `21290001192110001210904475617405975870000002000` |
+
+| Descrição                   | Linha digitável                                   |
+| --------------------------- | ------------------------------------------------- |
+| Boleto com vencimento       | `21290001192110001210904475617405975870000002000` |
 | Outro boleto com vencimento | `26090468898617118593663800000000590150000020759` |
+
 
 ```bash
 curl http://localhost:8080/boleto/21290001192110001210904475617405975870000002000
 ```
 
+
+
 ### Convênio / arrecadação (48 dígitos)
 
-| Descrição | Linha digitável |
-|---|---|
+
+| Descrição                | Linha digitável                                    |
+| ------------------------ | -------------------------------------------------- |
 | Módulo 10 (moeda 6 ou 7) | `817700000000010936759702411310797039001433708318` |
 | Módulo 11 (moeda 8 ou 9) | `848000000006010936759701241131079700390014337082` |
+
 
 ```bash
 curl http://localhost:8080/boleto/817700000000010936759702411310797039001433708318
 ```
 
+
+
 ### Exemplos de erro
 
-| Situação | Linha digitável |
-|---|---|
-| Tamanho inválido | `2609046889861711859366380000000590150000020759` |
-| Caractere inválido | `2609046889861711859x66380000000590150000020759000` |
-| DV inválido (título) | `21290001102110001210904475617405975870000002000` |
-| Moeda inválida (convênio) | `812300000000010936759702411310797039001433708318` |
+
+| Situação                  | Linha digitável                                     |
+| ------------------------- | --------------------------------------------------- |
+| Tamanho inválido          | `2609046889861711859366380000000590150000020759`    |
+| Caractere inválido        | `2609046889861711859x66380000000590150000020759000` |
+| DV inválido (título)      | `21290001102110001210904475617405975870000002000`   |
+| Moeda inválida (convênio) | `812300000000010936759702411310797039001433708318`  |
+
+
+
 
 ## Estrutura do projeto
 
@@ -147,19 +182,25 @@ src/
 └── tests/         # Testes unitários e de integração
 ```
 
+
+
 ## Algoritmos FEBRABAN — passo a passo
 
 Este projeto segue as regras de validação definidas pela FEBRABAN para linha digitável e código de barras. Abaixo está o resumo dos métodos usados em cada tipo de boleto.
 
 ### Referências oficiais
 
-| Documento | Uso neste projeto |
-|---|---|
-| [Convenção da Cobrança (FEBRABAN)](https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Conven%C3%A7%C3%A3o%20da%20Cobran%C3%A7a%20-%2005_02_2021_f.pdf) | Boleto **título** (cobrança bancária, 47 dígitos) — Anexo V define código de barras e linha digitável |
-| [Layout Padrão de Arrecadação — versão 8 (FEBRABAN)](https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Layout%20-%20C%C3%B3digo%20de%20Barras%20-%20Vers%C3%A3o%208%20-%2011_05_2026.pdf) | Boleto **convênio** (arrecadação, 48 dígitos) — módulo 10/11 por tipo de moeda |
-| [Página de layouts FEBRABAN](https://portal.febraban.org.br/pagina/3425/33/pt-br/layout-febraban) | Índice oficial com versões atualizadas dos manuais |
+
+| Documento                                                                                                                                                                                           | Uso neste projeto                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| [Convenção da Cobrança (FEBRABAN)](https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Conven%C3%A7%C3%A3o%20da%20Cobran%C3%A7a%20-%2005_02_2021_f.pdf)                                     | Boleto **título** (cobrança bancária, 47 dígitos) — Anexo V define código de barras e linha digitável |
+| [Layout Padrão de Arrecadação — versão 8 (FEBRABAN)](https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Layout%20-%20C%C3%B3digo%20de%20Barras%20-%20Vers%C3%A3o%208%20-%2011_05_2026.pdf) | Boleto **convênio** (arrecadação, 48 dígitos) — módulo 10/11 por tipo de moeda                        |
+| [Página de layouts FEBRABAN](https://portal.febraban.org.br/pagina/3425/33/pt-br/layout-febraban)                                                                                                   | Índice oficial com versões atualizadas dos manuais                                                    |
+
 
 ---
+
+
 
 ### Boleto título (47 dígitos)
 
@@ -167,13 +208,17 @@ A linha digitável é dividida em **5 campos**. Os três primeiros têm DV calcu
 
 **Estrutura da linha digitável:**
 
-| Campo | Posições (1-based) | Conteúdo |
-|---|---|---|
-| Campo 1 | 1–10 | Banco + moeda + início do campo livre + **DV** |
-| Campo 2 | 11–21 | Continuação do campo livre + **DV** |
-| Campo 3 | 22–32 | Continuação do campo livre + **DV** |
-| Campo 4 | 33 | **DV geral** do código de barras |
-| Campo 5 | 34–47 | Fator de vencimento + valor (centavos) |
+
+| Campo   | Posições (1-based) | Conteúdo                                       |
+| ------- | ------------------ | ---------------------------------------------- |
+| Campo 1 | 1–10               | Banco + moeda + início do campo livre + **DV** |
+| Campo 2 | 11–21              | Continuação do campo livre + **DV**            |
+| Campo 3 | 22–32              | Continuação do campo livre + **DV**            |
+| Campo 4 | 33                 | **DV geral** do código de barras               |
+| Campo 5 | 34–47              | Fator de vencimento + valor (centavos)         |
+
+
+
 
 #### Passo 1 — Validar DVs dos campos 1, 2 e 3 (módulo 10)
 
@@ -187,6 +232,8 @@ Para cada bloco de 9 dígitos (sem o DV):
 6. O DV é o complemento: se `resto = 0`, DV = **0**; senão, DV = **10 − resto**.
 7. Compare o DV calculado com o dígito na posição 10, 21 ou 32 do bloco correspondente.
 
+
+
 #### Passo 2 — Validar DV geral do código de barras (módulo 11)
 
 1. Monte o código de barras de 44 posições a partir da linha digitável (com placeholder no DV geral).
@@ -197,6 +244,8 @@ Para cada bloco de 9 dígitos (sem o DV):
 6. Se o resultado for **0, 10 ou 11**, o DV é **1** (regra FEBRABAN para cobrança).
 7. Compare com o dígito na **posição 33** da linha digitável (campo 4 — DV geral).
 
+
+
 #### Passo 3 — Extrair dados
 
 - **Código de barras:** remontar os 44 dígitos com o DV geral calculado.
@@ -205,14 +254,20 @@ Para cada bloco de 9 dígitos (sem o DV):
 
 ---
 
+
+
 ### Boleto convênio (48 dígitos)
 
 A linha digitável tem **4 blocos de 11 dígitos** (10 dados + 1 DV cada). O tipo de cálculo depende do **identificador de valor** na **3ª posição** (código de moeda/segmento):
 
-| 3ª posição | Módulo dos blocos | Módulo do DV geral do código de barras |
-|---|---|---|
-| **6** ou **7** | Módulo 10 | Módulo 10 |
-| **8** ou **9** | Módulo 11 | Módulo 11 |
+
+| 3ª posição     | Módulo dos blocos | Módulo do DV geral do código de barras |
+| -------------- | ----------------- | -------------------------------------- |
+| **6** ou **7** | Módulo 10         | Módulo 10                              |
+| **8** ou **9** | Módulo 11         | Módulo 11                              |
+
+
+
 
 #### Passo 1 — Validar DVs dos 4 blocos
 
@@ -235,6 +290,8 @@ Para cada bloco de 10 dígitos (sem o DV):
 4. Se `resto ≤ 1`, DV = **0**; se `resto = 10`, DV = **1**; senão, DV = **11 − resto**.
 5. Compare com o DV de cada bloco.
 
+
+
 #### Passo 2 — Montar código de barras e calcular DV geral
 
 1. Una os 4 blocos removendo os DVs de campo → 44 dígitos de conteúdo.
@@ -242,16 +299,23 @@ Para cada bloco de 10 dígitos (sem o DV):
 3. Aplique o mesmo módulo (10 ou 11) da moeda sobre esses 43 dígitos.
 4. Insira o DV calculado na **4ª posição** do código de barras.
 
+
+
 #### Passo 3 — Extrair valor
 
 - O valor está nas posições 5–14 do código de barras (11 dígitos), em centavos.
 
 ---
 
+
+
 ### Resumo dos módulos
 
-| Módulo | Onde é usado | Regra do DV |
-|---|---|---|
-| **Módulo 10** | DVs de campo (título e convênio 6/7) | `resto = soma % 10` → DV = 0 se resto 0, senão 10 − resto |
-| **Módulo 11 (cobrança)** | DV geral do título | `resto = soma % 11` → DV = 1 se resto 0 ou 1, senão 11 − resto; se resultado ≥ 10, DV = 1 |
-| **Módulo 11 (arrecadação)** | DVs de campo e geral do convênio 8/9 | `resto = soma % 11` → DV = 0 se resto ≤ 1, 1 se resto = 10, senão 11 − resto |
+
+| Módulo                      | Onde é usado                         | Regra do DV                                                                               |
+| --------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------- |
+| **Módulo 10**               | DVs de campo (título e convênio 6/7) | `resto = soma % 10` → DV = 0 se resto 0, senão 10 − resto                                 |
+| **Módulo 11 (cobrança)**    | DV geral do título                   | `resto = soma % 11` → DV = 1 se resto 0 ou 1, senão 11 − resto; se resultado ≥ 10, DV = 1 |
+| **Módulo 11 (arrecadação)** | DVs de campo e geral do convênio 8/9 | `resto = soma % 11` → DV = 0 se resto ≤ 1, 1 se resto = 10, senão 11 − resto              |
+
+
