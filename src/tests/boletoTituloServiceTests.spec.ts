@@ -27,7 +27,7 @@ describe("getBoletoTitulo", () => {
     };
 
     const result = getBoletoTitulo(
-      "21290001192110001210904475617405905870000002000"
+      "21290001192110001210904475617405105870000002000"
     );
     expect(result).toStrictEqual(expectedObject);
   });

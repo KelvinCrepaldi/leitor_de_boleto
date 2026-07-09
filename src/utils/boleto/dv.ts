@@ -64,10 +64,30 @@ const calculateDvModulo11Arrecadacao = (sum: number): number => {
   return 11 - rest;
 };
 
+const calculateDvFromTituloFieldSum = (sum: number): number => {
+  const rest = sum % 10;
+  const around = Math.ceil(sum / 10) * 10;
+  const result = around - rest;
+  return parseInt(result.toString()[1], 10);
+};
+
+const calculateDvModulo11Cobranca = (sum: number): number => {
+  const rest = sum % 11;
+  const result = 11 - rest;
+
+  if (result === 0 || result >= 10) {
+    return 1;
+  }
+
+  return result;
+};
+
 export {
   multiplyFieldModulo10,
   multiplyFieldModulo11,
   multiplyFieldTitulo,
   calculateDvModulo10,
   calculateDvModulo11Arrecadacao,
+  calculateDvFromTituloFieldSum,
+  calculateDvModulo11Cobranca,
 };

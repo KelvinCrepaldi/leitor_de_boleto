@@ -1,11 +1,11 @@
 # Leitor de Boleto
 
-Projeto de estudos para um desafio técnico: uma API que lê e valida **linhas digitáveis de boleto** no padrão brasileiro (FEBRABAN), suportando:
+Projeto para um desafio técnico: uma API que lê e valida **linhas digitáveis de boleto** no padrão brasileiro (FEBRABAN), suportando:
 
 - **Título** — boleto bancário (47 dígitos)
 - **Convênio** — pagamento de concessionárias / arrecadação (48 dígitos)
 
-A API valida os dígitos verificadores (DV), identifica o tipo do boleto e retorna o código de barras, valor e data de vencimento (quando aplicável).
+A API valida os dígitos verificadores (DV), identifica o tipo do boleto e retorna o código de barras, valor e data de vencimento.
 
 ## Sobre o projeto
 
@@ -15,6 +15,10 @@ A maior dificuldade não foi a API em si, e sim **entender as regras dos algorit
 
 Ao longo do desenvolvimento, o foco foi transformar essas regras em código organizado, testável e fácil de manter — com validação centralizada, separação por domínio (título/convênio) e testes cobrindo casos reais de sucesso e erro.
 
+> **Refatorações e legibilidade**
+>
+> Desde a primeira versão do algoritmo, foram feitas diversas refatorações para tornar o código mais fácil de ler e de entender. A ideia foi aproximar a implementação dos passos descritos na documentação FEBRABAN: primitivas matemáticas reutilizáveis ficam em `utils/boleto/dv.ts`, a validação de formato fica no middleware, e os services (`getBoletoTitulo`, `getBoletoConvenio`) concentram o fluxo completo — validação e extração — com comentários que espelham o passo a passo do README. Cada iteração buscou reduzir funções aninhadas e abstrações difíceis de seguir, priorizando um código que qualquer pessoa consiga percorrer do início ao fim sem precisar saltar entre muitos arquivos.
+
 ## Tecnologias
 
 | Tecnologia | Versão |
@@ -23,7 +27,6 @@ Ao longo do desenvolvimento, o foco foi transformar essas regras em código orga
 | pnpm | 10.13.1 |
 | TypeScript | 4.9.5 |
 | Express | 4.22.2 |
-| dotenv | 16.6.1 |
 | Jest | 28.1.3 |
 | ts-jest | 28.0.8 |
 | ts-node-dev | 2.0.0 |
@@ -138,8 +141,9 @@ curl http://localhost:8080/boleto/8177000000000109367597024113107970390014337083
 ```
 src/
 ├── controllers/   # Rotas HTTP
-├── services/      # Orquestração (getBoleto, getBoletoTitulo, getBoletoConvenio)
-├── utils/boleto/  # Regras de validação e cálculo (título, convênio, DV)
+├── middlewares/   # Validação de formato (Passo 0: numérico + tamanho)
+├── services/      # Algoritmos FEBRABAN passo a passo (getBoleto, getBoletoTitulo, getBoletoConvenio)
+├── utils/boleto/  # Primitivas reutilizáveis (constants, types, dv)
 └── tests/         # Testes unitários e de integração
 ```
 
